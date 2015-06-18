@@ -7,5 +7,5 @@ The discretization of the distances were defined as follows:
 
 Those distances are computed from user's home to business coordinates.
 User's home was computed from centroid by the user's checkins
-=======
+-------
 # yelp-research
