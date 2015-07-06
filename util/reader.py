@@ -54,7 +54,6 @@ class reader:
 		return aux_array
 
 	def load(self, size=sys.maxsize, progress=True):  	
-		obj = { }
 		data = []
 		data_full = []
 		labels = []
@@ -68,7 +67,7 @@ class reader:
 			data.append(aux[1:])
 			
 			#creating labels
-			labels.extend('g' if int(aux[0]) == 1 else 'r')				
+			labels.append(int(aux[0]))
 			#counting iterations
 			i += 1
 			if i % 10000 == 0:
@@ -79,8 +78,4 @@ class reader:
 				break
 
 		f.close()
-		obj['data-full'] = data_full
-		obj['data'] = data
-		obj['labels'] = labels
-		
-		return obj
+		return data, labels, data_full

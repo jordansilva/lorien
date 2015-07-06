@@ -34,28 +34,34 @@ import ast
 from analysis.parser import parser #parser
 from util.reader import reader #loaddata
 from algorithms.rbm import RBM #rbm
+from sklearn.neural_network import BernoulliRBM
 import matplotlib.pyplot as plt #mathplotlib
 
 #tsne
 from tsne import bh_sne
 
-dataset3 = '/Users/jordansilva/Documents/Jordan/Mestrado/Lorien/code/output/vector-3.rbm'
-dataset4 = '/Users/jordansilva/Documents/Jordan/Mestrado/Lorien/code/output/vector-4.rbm'
+dataset = '/Users/jordansilva/Documents/Jordan/Mestrado/Lorien/code/output/vector.rbm'
 
 def run(training_size = sys.maxsize):
 	
 	print 'size of training sample: %d' % training_size 
 
 	#load data
-	r = reader(dataset3)
-	obj = r.load(size=training_size, progress=False)
+	r = reader(dataset)
+	data, labels, data_full = r.load(size=training_size, progress=False)
 
-	#parser
+	print data[0]
+	return
+
+#http://lvdmaaten.github.io/tsne/
+#t-Distributed Stochastic Neighbor Embedding (t-SNE) is a (prize-winning) technique for dimensionality reduction that is particularly well suited for the visualization of high-dimensional datasets.
+def t_sne(obj):
+
 	p = parser()
 	data_categories = {}
 	label_categories = {}
-	
-	for d in obj['data-full']:
+
+	for d in obj:
 		for c in p.categories_item(d):
 			if c not in data_categories:
 				data_categories[c] = []
@@ -73,17 +79,25 @@ def run(training_size = sys.maxsize):
 			t_sne(data_categories[c], label_categories[c])
 		else:
 			print 'small dimensionality'
-	#echen_rbm(obj)
 
-	return
-
-#http://lvdmaaten.github.io/tsne/
-#t-Distributed Stochastic Neighbor Embedding (t-SNE) is a (prize-winning) technique for dimensionality reduction that is particularly well suited for the visualization of high-dimensional datasets.
-def t_sne(data, labels):
-	arr = np.array(data, dtype=np.float64)
+	arr = np.array(data_categories, dtype=np.float64)
 	x2 = bh_sne(arr)
-	plt.scatter(x2[:, 0], x2[:, 1], c=labels)
+	plt.scatter(x2[:, 0], x2[:, 1], c=label_categories)
 	plt.show()
+
+def bernoulli_rbm(data, labels):
+	
+	
+	print '> running rbm'
+	print 'visible units: %d' % len(data)
+	print 'hidden units: %d' % hidden_units
+	print 'epochs size: %d' % epochs_size
+	print '-------------'
+	
+	rbm = BernoulliRBM(batch_size=32, learning_rate=0.1, n_components=5, n_iter=10, random_state=numpy.RandomState, verbose=True)
+	rbm.fit(data, labels)
+	training_data = np.array(data)
+	rbm.train(training_data, epochs_size, True)
 
 def echen_rbm(data):
 	visible_units = 57

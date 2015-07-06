@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>	
+	
+	<link rel="stylesheet" href="css/jqcloud.css" />
+</head>
+<body>
+	<div id="demo" style="height: 800px">&nbsp;</div>
+
+	<script src="js/jquery-1.11.3.min.js"></script>
+	<script src="js/jqcloud.js"></script>
+
+	<script type="text/javascript">		
+	var words = [{text: "has tv", weight: 7},
+				{text: "parking garage", weight: 2},
+				{text: "ambience intimate", weight: 1},
+				{text: "wheelchair accessible", weight: 10},
+				{text: "happy hour", weight: 3},
+				{text: "accepts credit cards", weight: 14},
+				{text: "good for lunch", weight: 6},
+				{text: "ambience romantic", weight: 1},
+				{text: "good for kids", weight: 7},
+				{text: "good for groups", weight: 10},
+				{text: "parking lot", weight: 10},
+				{text: "parking valet", weight: 1},
+				{text: "ambience divey", weight: 1},
+				{text: "outdoor seating", weight: 4},
+				{text: "caters", weight: 3},
+				{text: "delivery", weight: 2},
+				{text: "price range 2", weight: 9},
+				{text: "price range 1", weight: 3},
+				{text: "corkage", weight: 1},
+				{text: "ambience casual", weight: 7},
+				{text: "parking street", weight: 1},
+				{text: "price range 3", weight: 1},
+				{text: "take out", weight: 8},
+				{text: "good for dinner", weight: 6},
+				{text: "dogs allowed", weight: 1},
+				{text: "music jukebox", weight: 1},
+				{text: "price range 4", weight: 1},
+				{text: "waiter service", weight: 8},
+				{text: "takes reservations", weight: 4},
+				{text: "distance-far", weight: 1},
+				{text: "distance-near", weight: 5},
+				{text: "distance-medium", weight: 10},
+				{text: "partly-cloudy-day", weight: 1},
+				{text: "rain", weight: 10},
+				{text: "clear-day", weight: 5},
+				{text: "bars", weight: 6},
+				{text: "fashion", weight: 2},
+				{text: "golf", weight: 2},
+				{text: "specialty food", weight: 2},
+				{text: "restaurants", weight: 20},
+				{text: "accessories", weight: 2},
+				{text: "watches", weight: 2},
+				{text: "sushi bars", weight: 2},
+				{text: "tanning", weight: 2},
+				{text: "juice bars & smoothies", weight: 2},
+				{text: "dry cleaning & laundry", weight: 2},
+				{text: "yoga", weight: 2},
+				{text: "jewelry", weight: 2},
+				{text: "sports bars", weight: 2},
+				{text: "local services", weight: 2},
+				{text: "fitness & instruction", weight: 2},
+				{text: "active life", weight: 4},
+				{text: "shopping", weight: 2},
+				{text: "food", weight: 4},
+				{text: "french", weight: 2},
+				{text: "japanese", weight: 4},
+				{text: "pubs", weight: 2},
+				{text: "asian fusion", weight: 2},
+				{text: "beauty & spas", weight: 2},
+				{text: "gastropubs", weight: 2},
+				{text: "ramen", weight: 2},
+				{text: "british", weight: 4},
+				{text: "american (new)", weight: 6},
+				{text: "nightlife", weight: 6},
+				{text: "italian", weight: 4},
+				{text: "diners", weight: 2}];
+		
+		$('#demo').jQCloud(words, { autoResize: true });
+	</script>
+</body>
+</html>

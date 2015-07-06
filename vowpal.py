@@ -107,12 +107,12 @@ def generateVW():
 	#fw_feature = open('output/analysis/' + file_feature_name, 'w')
 
 	f = open(file_reviews)	
-	fw = open('output/rmb.data', 'w')
+	fw = open('output/20053-20131.vw', 'w')
 
 	for line in f:
 		item = json.loads(line)
 		date = datetime.datetime.strptime(item['date'], '%Y-%m-%d')
-		if date.year >= 0:		
+		if (date.year == 2005 and date.month >= 03) or (date.year > 2005 and date.year < 2013) or (date.year == 2013 and date.month < 02):
 			user_id = item['user_id']
 			item_id = item['business_id']
 			review_id = item['review_id']

@@ -42,15 +42,16 @@ input
 		rating 'id |user avegare_stars:<1-5> review_counts:<int>
 							 |item stars:<1-5> [features]
 							 |category [categories]
-							 |weather <clear-day|cloudy|fog|partly-clear|rain|snow|wind> temperaturemin:<double> temperaturemax:<double>
+							 |weather <clear-day|cloudy|fog|partly-cloudy|rain|snow|wind> temperaturemin:<double> temperaturemax:<double>
 							 |distance <near|medium|far>
 							 |temporal <dayOfWeek> weekday:<bool> weekend:<bool> <month> <season> <date>
 
 output
-		[ relevant, categories, weather, distance, temporal ]
+				 1 					22 				7 				3 		 7+1+1+12+4
+		[ relevant, categories, weather, distance, temporal ]  #58
 '''
 
-weatherVector 		= ['clear-day','cloudy','fog','partly-clear','rain','snow','wind']
+weatherVector 		= ['clear-day','cloudy','fog','partly-cloudy','rain','snow','wind']
 distanceVector 		= ['near', 'medium', 'far']
 daysOfWeeksVector = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 isWeekendVector		= ['weekday', 'weekend']
@@ -62,6 +63,8 @@ class parser:
 	def constructVectorBase(self):
 		#rating
 		self.baseVector.append('relevant')
+		self.baseVector.append('user_id')
+		self.baseVector.append('business_id')
 
 		#categories
 		f = open(file_categories)
@@ -86,20 +89,30 @@ class parser:
 		return
 
 	def parse(self, filename = default_dataset, output = default_output):
+		self.users = []
+		self.business = []
+
 		f = open(filename)
 		fw = open(output, 'w')
 		
 		for line in f:
 			line_split = line.split('|')
-			
+			ident = line_split[0][1:]
+
 			#rating
 			rating = int(line_split[0][:1])
 
 			#user data
-			#line_split[1]
+			uid = ident[ident.index('uid_') + 4:ident.index('_bid_')]
 
 			#item data
-			#line_split[2]
+			bid = ident[ident.index('bid_') + 4:ident.index('_rid_')]
+
+			if uid not in self.users:
+				self.users.append(uid)
+
+			if bid not in self.business:
+				self.business.append(bid)
 
 			#categories info
 			categories = line_split[3].strip().split(" ")
@@ -107,7 +120,7 @@ class parser:
 
 			#weather
 			weather = line_split[4].strip().split(" ")		
-			weather = weather[1].replace('partly-cloudy-day', 'partly-clear').replace('partly-cloudy-night', 'partly-clear')
+			weather = weather[1].replace('partly-cloudy-day', 'partly-cloudy').replace('partly-cloudy-night', 'partly-cloudy')
 			
 			#distance
 			distance = line_split[5].strip().split(" ")
@@ -121,13 +134,27 @@ class parser:
 			month = temporal[4]
 			season = temporal[5]
 
-			item = self.constructVector(rating, categories, weather, distance, dayOfWeek, isWeekday, isWeekend, month, season, line)
+			uid_n = self.users.index(uid) + 1
+			bid_n = self.business.index(bid) + 1
+
+			item = self.constructVector(rating, uid_n, bid_n, categories, weather, distance, dayOfWeek, isWeekday, isWeekend, month, season, line)
 			#print line_split
 
 			fw.write(str(item) + '\n')
 			
 		fw.close()
 		f.close()
+
+		fw = open(directory + '/users.data', 'w')
+		for ind, x in enumerate(self.users):
+			fw.write(('%d %s\n' % (ind + 1, x)))
+		fw.close()
+
+		fw = open(directory + '/business.data', 'w')
+		for ind, x in enumerate(self.business):
+			fw.write(('%d %s\n' % (ind + 1, x)))
+		fw.close()
+
 		print 'places without any categories: %d' % self.statistical['no_categories']		
 		print 'file generated: %s' % output
 		print 'statistical data'
@@ -135,7 +162,7 @@ class parser:
 
 		return
 
-	def constructVector(self, rating, categories, weather, distance, dayOfWeek, isWeekday, isWeekend, month, season, line):
+	def constructVector(self, rating, uid, bid, categories, weather, distance, dayOfWeek, isWeekday, isWeekend, month, season, line):
 		itemVector = [0] * len(self.baseVector)
 		
 		#relevant
@@ -145,6 +172,12 @@ class parser:
 
 		index = self.baseVector.index('relevant')
 		itemVector[index] = isRelevant
+
+		index = self.baseVector.index('user_id')
+		itemVector[index] = uid
+
+		index = self.baseVector.index('business_id')
+		itemVector[index] = bid
 
 		categoryFound = 0
 		#categories
@@ -206,9 +239,12 @@ class parser:
 		isRelevant = 'relevant' if item[0] == 1 else 'irrelevant'
 		translated.append(isRelevant)
 
-		item = item[1:]
-		baseVector2 = self.baseVector[1:]
+		translated.append(item[1])
+		translated.append(item[2])
 
+		item = item[3:]
+		baseVector2 = self.baseVector[3:]
+		
 		for inx, val in enumerate(item):
 			if val == 1:
 				translated.append(baseVector2[inx])
